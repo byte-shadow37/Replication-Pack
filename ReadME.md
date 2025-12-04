@@ -1,1 +1,1 @@
-Create Aider replication package page
+Create replication package page
