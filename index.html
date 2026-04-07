@@ -1,7 +1,6 @@
 <html><head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-	<meta name="description" content="Augmenting Developer Productivity with an AI Agent for Clone
-Identification and Automated Refactoring">
+		<meta name="description" content="LLM-Based Name Recommendation: An Exploratory Study">
 	<link href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz|Droid+Sans" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" media="all" href="css/inland.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
@@ -11,9 +10,12 @@ Identification and Automated Refactoring">
 	<script type="text/javascript" src="js/jquery.scrollTo.js"></script>
 	<script type="text/javascript" src="js/template.js"></script>
 	<script type="text/javascript" src="js/backontop.js"></script>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 
 
 	<title>LLMs Name Suggestion</title>
@@ -24,15 +26,10 @@ Identification and Automated Refactoring">
 	<div id="header" class="clearfix">
 		<div id="sitetitle" class="clearfix">
 			<h1>
-    Augmenting Developer Productivity with an AI Agent for Clone Identification
+    LLM-Based Name Recommendation: An Exploratory Study
 </h1>
 		</div>
-		<div id="sitetitle" class="clearfix">
-			<h1>
-    and Automated Refactoring
-  
-</h1>
-		</div>
+		
 
 		<nav2 id="stickynav">
 		<div class="verticalMenu">
@@ -41,7 +38,7 @@ Identification and Automated Refactoring">
 				<li><a href="#experimentaldata" class="backontop">Experiment data</a></li>
 				<li><a href="#testresults" class="backontop">Testing results</a></li>
 				<li><a href="#namesgenerated" class="backontop">10 Names Generated</a></li>
-				<!-- <li><a href="#tableandlisting" class="backontop">Tables and listings</a></li> -->
+				<li><a href="#tableandlisting" class="backontop">Tables and listings</a></li>
 			</ul>
 		</div>
 		</nav2>
@@ -646,162 +643,38 @@ use them for suggesting names.
 					</tbody>
 				</table>
 			</div>
-			<!-- <h2 id="tableandlisting">Tables and listings</h2>
-			<h4 style="text-align: center;">Figure: Overview of methodology</h3>
-			<img src="figures/workflow_aider.png" alt="" style="display: block; margin: 0 auto; width: 100%;"> -->
-			<!-- <h3>Listings</h3> -->
-			<!-- <h4>Ineffective refactoring example: Type-2</h4>
-			<pre><code class="language-java">Private void processFloatLoop(int n, InFunction<Float> termFunction, BiConsumer<Float, Float> fooCaller) {
-    float sum = 0; // C1
-    float prod = 1;
-    for (int i = 1; i <= n; i++) {
-        float term = termFunction.apply(i);
-        sum = sum + term;
-        prod = prod * term;
-        fooCaller.accept(sum, prod);
-    }
-}
+			<h2 id="tableandlisting">Tables and listings</h2>
+			<h4 style="text-align: center;">Figure: Overview of methodology</h4>
+			<img src="figures/workflow_aider.png" alt="" style="display: block; margin: 0 auto; width: 100%;">
+			<h3>Listings</h3>
+			<h4>Prompt template for method name suggestions</h4>
+			<pre><code class="language-bash">Suggest {count} concise and meaningful Java method names for the following extracted method:
 
-Private void processIntLoop(int n, IntUnaryOperator termFunction, BiConsumer<Integer, Integer> fooCaller) {
-    int sum = 0; // C1
-    int prod = 1;
-    for (int i = 1; i <= n; i++) {
-        int term = termFunction.apply(i);
-        sum = sum + term;
-        prod = prod * term;
-        fooCaller.accept(sum, prod);
+{codeSnippet}
+
+List only the method names, no method bodies. Use valid Java identifiers and place each name on a new line, ranked from most to least confident.
+
+Output the name suggestion in this format: rank method_name_1, for example, 1 name_1</code></pre>
+		<h4>Unnamed extracted method</h4>
+		<pre class="line-numbers"><code class="language-java">private void tempName(int n) {
+    if (n &lt; 0) {
+        throw new IllegalArgumentException("Factorial is not defined for negative numbers.")
     }
-}
-				</code></pre>
-			<h4>Ineffective refactoring example: Type-4</h4>
-			<pre><code class="language-java">private void calculateLoop(int n, int startValue, OperationOrder order) {
-    float sum = 0; // C1
-    float prod = 1;
-    for (int i = startValue; i <= n; i++) {
-        switch(order) {
-            case SUM_PROD_FOO:
-                sum = sum + i;
-                prod = prod * i;
-                foo(sum, prod);
-                break;
-            case PROD_SUM_FOO:
-                prod = prod * i;
-                sum = sum + i;
-                foo(sum, prod);
-                break;
-            case SUM_FOO_PROD:
-                sum = sum + i;
-                foo(sum, prod);
-                prod = prod * i;
-                break;
-        }
+    long retult = 1;
+    for (int i = 2; i &lt;= n; i++) {
+        result *= i;
     }
+    return result;
 }</code></pre>
-	<h4>Direct clone removel example</h4>
-	<pre><code class="language-java">static public int direction(int x1, int y1, int x2, int y2) {
-    int direction = 0;
-    int vx = x2 - x1;
-    int vy = y2 - y1;
-
-    if (vy < vx && vx > -vy) {
-        direction = EAST;
+		<h4>Unexpected name suggestion output</h4>
+		<pre class="line-numbers"><code class="language-java">private void calculateFactorial(int n) {
+    if (n &lt; 0) {
+        throw new IllegalArgumentException("Factorial is not defined for negative numbers.")
     }
-    else if (vy > vx && vy > -vx) {
-        direction = NORTH;
-    }
-    else if (vx < vy && vx < -vy) {
-        direction = WEST;
-    }
-    else {
-        direction = SOUTH;
-    }
-    return direction;
-}
-
-static public int direction_Cloned(int x1, int y1, int x2, int y2) {
-    int d = 0;
-    int x = x2 - x1;
-    int y = y2 - y1;
-
-    if (y < x && x > -y) {
-        d = EAST;
-    }
-    else if (y > x && y > -x) {
-        d = NORTH;
-    }
-    else if (x < y && x < -y) {
-        d = WEST;
-    }
-    else {
-        d = SOUTH;
-    }
-    return d;
-}
-\end{lstlisting}</code></pre>
-		<h4>Call-based clone subtitution example</h4>
-		<pre><code class="language-java">public void init() {
-    createIconkit();
-    getVersionControlStrategy().assertCompatibleVersion();
-    setUndoManager(new UndoManager());
-
-    getContentPane().setLayout(new BorderLayout());
-
-    fView = createDrawingView();
-
-    JPanel attributes = createAttributesPanel();
-    createAttributeChoices(attributes);
-    getContentPane().add("North", attributes);
-
-    JPanel toolPanel = createToolPalette();
-    createTools(toolPanel);
-    getContentPane().add("West", toolPanel);
-
-    getContentPane().add("Center", (Component)view());
-    JPanel buttonPalette = createButtonPanel();
-    createButtons(buttonPalette);
-    getContentPane().add("South", buttonPalette);
-
-    initDrawing();
-    // JFC should have its own internal double buffering...
-    //setBufferedDisplayUpdate();
-    setupAttributes();
-}
-
-public void init_Cloned() {
-        init();
-}</code></pre>
-	<h4>Fragmentation of logic example</h4>
-	<pre><code class="language-java">void buildChildMenus() { 
-    JInternalFrame[] array = desktop.getAllFrames();
-    updateWindowCommands(array.length > 0);
-    
-    if (array.length == 0) {
-        return;
-    }
-    
-    addSeparator();
-    createChildMenuItems(array);
-}
-
-private void updateWindowCommands(boolean enabled) {
-    cascadeCommand.setEnabled(enabled);
-    tileHCommand.setEnabled(enabled);
-    tileVCommand.setEnabled(enabled);
-    arrangeHCommand.setEnabled(enabled);
-    arrangeVCommand.setEnabled(enabled);
-}
-
-private void createChildMenuItems(JInternalFrame[] frames) {
-    for (int i = 0; i < frames.length; i++) {
-        ChildMenuItem menu = new ChildMenuItem(frames[i]);
-        menu.setState(i == 0);
-        menu.addActionListener(createChildMenuItemListener());
-        menu.setIcon(frames[i].getFrameIcon());
-        add(menu);
-    }
-}</code></pre>
+    long retult = 1;
+    for (int i = 2; i &lt;= n; i++) {</code></pre>
 		</div>
-	</div> -->
+	</div>
 
 	<div id="footer" class="shadow">
 		<!-- <script type="text/javascript">footer();</script>		 -->
